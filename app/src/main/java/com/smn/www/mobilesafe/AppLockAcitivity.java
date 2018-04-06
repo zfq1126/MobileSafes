@@ -49,6 +49,8 @@ public class AppLockAcitivity extends Activity {
             case R.id.bt_lock:
                 // 当点击 已加锁的时候  已加锁的 背景 变为紫色 文字颜色为白色
                 // 未加锁 背景变为 白色  文字颜色变为紫色
+                //这部分还有问题的
+                //需要重新理解，修改
                 btLock.setBackgroundResource(R.drawable.shape_lock_purple_bg);
                 btLock.setTextColor(Color.WHITE);
 
