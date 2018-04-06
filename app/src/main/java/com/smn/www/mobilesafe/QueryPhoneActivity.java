@@ -45,7 +45,7 @@ public class QueryPhoneActivity extends Activity {
             /*
             *
             * 学会用git 和android studio  还有idea
-            *
+            *22222222222222
             * */
             @Override
             public void afterTextChanged(Editable s) {
