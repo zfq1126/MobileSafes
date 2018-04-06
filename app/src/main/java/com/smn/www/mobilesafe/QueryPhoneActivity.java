@@ -42,6 +42,11 @@ public class QueryPhoneActivity extends Activity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
+            /*
+            *
+            * 学会用git 和android studio  还有idea
+            *
+            * */
             @Override
             public void afterTextChanged(Editable s) {
                 //文本输入完成时候进行查询
