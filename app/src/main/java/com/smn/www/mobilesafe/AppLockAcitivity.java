@@ -63,7 +63,7 @@ public class AppLockAcitivity extends Activity {
             }
             Log.i("zzzzzzzzz",appInfo.toString());
         }
-        //4-9开始用适配器适配两个listView，进行数据的填充
+        //4-9开始用适配器适配两个listView，进行数据的填充，；比较难完成
     }
 
     @OnClick({R.id.bt_unlock, R.id.bt_lock})
