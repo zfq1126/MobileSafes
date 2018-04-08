@@ -20,6 +20,7 @@ import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2018-03-16.
+ * 此activity 创建的日期
  */
 public class QueryPhoneActivity extends Activity {
     @InjectView(R.id.et_phonenumber)
