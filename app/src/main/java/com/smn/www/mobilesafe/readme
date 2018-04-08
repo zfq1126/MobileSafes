@@ -1,0 +1,31 @@
+区分不同的应用程序。label,包名packaggenme，图标icon。
+引擎类，给程序锁页面提供数据，AppInfoProvider
+(提供所有安装的应用程序
+得到包的管理者
+得到已经安装的包信息的集合
+循环取得安装包信息的一部分
+包名，
+得到应用程序的名称loadlabel(在application中)
+得到应用程序的图标
+放置到javabean中，AppInfo)
+创建数据库，存放已加锁程序的信息，AppInfoOpenHelper 继承SQLliteOpenHelper{};
+创建数据库，创建数据表，
+public class AppInfoOpenHelper extends SQLiteOpenHelper {
+    public AppInfoOpenHelper(Context context) {
+        super(context,DBConstent.DB_NAME , null, 1);
+    }
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String sql = "create table "+DBConstent.TABLE_NAME+"(_id integer primary key, "+DBConstent.PACKAGENAME+" varchar(10));";
+        sqLiteDatabase.execSQL(sql);
+    }
+创建一个类用来存放数据库常量信息的名称。DBConstent;
+创建一个数据库的操作类AppDao,初始化AppInfoOpenHelper信息，对数据库进行操作（增删查）
+public class AppInfoDao {
+    private  AppInfoOpenHelper helper;
+    //1 需要构造方法   新建一个数据库和表 ,后面的操作在此基础上进行操作
+    public  AppInfoDao(Context ctx){
+        helper = new AppInfoOpenHelper(ctx);
+    }在此基础上对数据库进行增删查
+在AppLockActivity类中操作，判断应用程序是否加锁，进行数说明已经加锁，(Activity),否则没有加锁。接下来适配数据
+获取所有信息之后，开始适配数据（先从数据库中获取数据然后，然后是适配数据。）
