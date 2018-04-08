@@ -26,6 +26,6 @@ public class AppInfoDao {
     //1 需要构造方法   新建一个数据库和表 ,后面的操作在此基础上进行操作
     public  AppInfoDao(Context ctx){
         helper = new AppInfoOpenHelper(ctx);
-    }在此基础上对数据库进行增删查
+    }在此基础上对数据库进行增删查..
 在AppLockActivity类中操作，判断应用程序是否加锁，进行数说明已经加锁，(Activity),否则没有加锁。接下来适配数据
 获取所有信息之后，开始适配数据（先从数据库中获取数据然后，然后是适配数据。）
