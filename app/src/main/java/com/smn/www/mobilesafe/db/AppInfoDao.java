@@ -20,18 +20,23 @@ public class AppInfoDao {
         helper=new AppInfoOpenHelper(context);
     }
     //数据库中插入信息
-    public void Insert(String packagename){
+    public boolean Insert(String packagename){
         SQLiteDatabase db=helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBConstent.PACKAGENAME,packagename);
-        db.insert(DBConstent.TABLE_NAME,null,values);
+        //如果插入不成功，就抛出一个异常，返回值为-1
+        Long num=db.insert(DBConstent.TABLE_NAME,null,values);
         db.close();
+        //如果插入成功就返回true 否则就返回false
+        return num!=-1;
     }
     //数据库中删除信息
-    public  void delete(String packagename){
+    public  boolean delete(String packagename){
         SQLiteDatabase db=helper.getWritableDatabase();
-        db.delete(DBConstent.TABLE_NAME,DBConstent.PACKAGENAME + "=?",new String[]{packagename});
+        int i=db.delete(DBConstent.TABLE_NAME,DBConstent.PACKAGENAME + "=?",new String[]{packagename});
         db.close();
+        //对异常删除的判断和记录
+        return i>-1;
     }
     //查询全部记录
     public List<String> QueryAll(){
