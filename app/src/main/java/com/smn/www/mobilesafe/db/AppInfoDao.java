@@ -24,19 +24,19 @@ public class AppInfoDao {
         SQLiteDatabase db=helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBConstent.PACKAGENAME,packagename);
-        db.insert(DBConstent.TB_NAME,null,values);
+        db.insert(DBConstent.TABLE_NAME,null,values);
         db.close();
     }
     //数据库中删除信息
     public  void delete(String packagename){
         SQLiteDatabase db=helper.getWritableDatabase();
-        db.delete(DBConstent.TB_NAME,DBConstent.PACKAGENAME + "=?",new String[]{packagename});
+        db.delete(DBConstent.TABLE_NAME,DBConstent.PACKAGENAME + "=?",new String[]{packagename});
         db.close();
     }
     //查询全部记录
     public List<String> QueryAll(){
         SQLiteDatabase db=helper.getWritableDatabase();
-        Cursor cursor = db.query(DBConstent.TB_NAME, new String[]{DBConstent.PACKAGENAME}, null, null, null, null, null);
+        Cursor cursor = db.query(DBConstent.TABLE_NAME, new String[]{DBConstent.PACKAGENAME}, null, null, null, null, null);
         List<String> list = new ArrayList<>();
         while (cursor.moveToNext()){
             String packagename=cursor.getString(0);
@@ -48,7 +48,7 @@ public class AppInfoDao {
     //根据包名进行查询，查询某个记录是否在数据库的表中
     public  boolean QueryPackagename(String packagename){
         SQLiteDatabase db=helper.getWritableDatabase();
-        Cursor cursor = db.query(DBConstent.TB_NAME, null, DBConstent.PACKAGENAME + "=?", new String[]{packagename}, null, null, null, null);
+        Cursor cursor = db.query(DBConstent.TABLE_NAME, null, DBConstent.PACKAGENAME + "=?", new String[]{packagename}, null, null, null, null);
         boolean b=false;//设想不存在这个记录
         if (cursor!=null){
             while (cursor.moveToNext()){

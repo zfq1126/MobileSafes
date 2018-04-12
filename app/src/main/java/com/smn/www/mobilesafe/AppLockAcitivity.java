@@ -2,11 +2,17 @@ package com.smn.www.mobilesafe;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 
 import com.smn.www.mobilesafe.bean.AppInfo;
 import com.smn.www.mobilesafe.db.AppInfoDao;
@@ -35,6 +41,8 @@ public class AppLockAcitivity extends Activity {
     private List<AppInfo> lockList;
     private AppInfoDao dao;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,28 +50,123 @@ public class AppLockAcitivity extends Activity {
         ButterKnife.inject(this);
 
         dao = new AppInfoDao(this);
-        List<AppInfo> appInfos = AppInfoProvider.AppInfoList(this);
-        //遍历已将安装城程序的所有信息
-        for (AppInfo appInfo:appInfos) {
-            // 需要检测这些应用程序是加锁的还是没有加锁
-            // 需要一个已加锁的 数据库,专门用来 对是否加锁应用程序信息的 增 删 查
-            // 如何判断 属于已加锁 的还是 未加锁的 : 通过包名在数据库中查询 ,如果查到,说明属于已经加锁的 应用,否则属于没有加锁的应用
+        initDada();
+    }
 
-            //未加锁的集合
-            unLockList = new ArrayList<>();
-            //已加锁的集合
-            lockList = new ArrayList<>();
-            boolean b = dao.QueryPackagename(appInfo.getPackageName());
-            if (b){
-                // 说明属于已经加锁的应用   将这些应用放在一个已加锁的应用集合中
-                lockList.add(appInfo);
-            }else {
-                // 说明属于已经加锁的应用   将这些应用放在一个未加锁的应用集合中
-                unLockList.add(appInfo);
+    private void initDada() {
+        new Thread() {
+            @Override
+            public void run() {
+                //遍历已将安装城程序的所有信息
+                List<AppInfo> appInfos = AppInfoProvider.AppInfoList(AppLockAcitivity.this);
+
+                //未加锁的集合
+                unLockList = new ArrayList<>();
+                //已加锁的集合
+                lockList = new ArrayList<>();
+                for (AppInfo appInfo : appInfos) {
+                    // 需要检测这些应用程序是加锁的还是没有加锁
+                    // 需要一个已加锁的 数据库,专门用来 对是否加锁应用程序信息的 增 删 查
+                    // 如何判断 属于已加锁 的还是 未加锁的 : 通过包名在数据库中查询 ,如果查到,说明属于已经加锁的 应用,否则属于没有加锁的应用
+
+
+                    boolean b = dao.QueryPackagename(appInfo.getPackageName());
+                    if (b) {
+                        // 说明属于已经加锁的应用   将这些应用放在一个已加锁的应用集合中
+                        lockList.add(appInfo);
+                    } else {
+                        // 说明属于已经加锁的应用   将这些应用放在一个未加锁的应用集合中
+                        unLockList.add(appInfo);
+                    }
+                    //要为ListView匹配数据，不能再子线程中，需要在主线程中
+                    Log.i("zzzzzzzzz", appInfo.toString());
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //对listview数据进行适配
+                        //为了区分是哪个数据匹配的数据匹配器需要在匹配时候传入一个参数
+                        MyAdapter myAdapter = new MyAdapter(true);
+                        //加锁时视图时候的数据适配器
+                        lvLock.setAdapter(myAdapter);
+                        //未加锁时视图是的数据适配
+                        MyAdapter myAdapter1 = new MyAdapter(false);
+                        lvUnlock.setAdapter(myAdapter1);
+                    }
+                });
             }
-            Log.i("zzzzzzzzz",appInfo.toString());
+        }.start();
+
+    }
+    private class MyAdapter extends BaseAdapter {
+        private boolean isLock;
+
+        public MyAdapter(boolean isLock) {
+            this.isLock = isLock;
         }
-        //4-9开始用适配器适配两个listView，进行数据的填充，；比较难完成
+
+        @Override
+        public int getCount() {
+            if (isLock) {
+                //匹配的是已经加锁的集合
+                return lockList.size();
+            } else {
+                //匹配的是已经加锁的集合
+                return unLockList.size();
+            }
+        }
+
+        @Override
+        public Object getItem(int position) {
+            //返回的是当前记录
+            if (isLock) {
+                return lockList.get(position);
+
+            } else {
+                return unLockList.get(position);
+            }
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                convertView = View.inflate(AppLockAcitivity.this, R.layout.app_lock_item, null);
+                // 对 多次使用findviewbyid 进行优化
+                // 第一次将找到 的 id 号 保存到一个viewHolder类中 ,然后将这个类放在 convertview 中
+                viewHolder = new ViewHolder();
+                viewHolder.ivIcon = (ImageView) convertView.findViewById(R.id.iv_item_lock_icon);
+                viewHolder.tvName = (TextView) convertView.findViewById(R.id.tv_item_lock_desc);
+                viewHolder.ivPress = (ImageView) convertView.findViewById(R.id.iv_item_lock_press);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            // 当前是 哪条记录 (已加锁 中集合记录 还是 未加锁 集合中的记录 )
+            AppInfo appInfo = (AppInfo) getItem(position);
+            viewHolder.ivIcon.setImageDrawable(appInfo.getDrawable());
+            viewHolder.tvName.setText(appInfo.getPackageName());
+            if (isLock) {
+                // 如果是 加锁 页面,显示 开锁的图标
+                viewHolder.ivPress.setImageResource(R.drawable.selector_item_unlock_bg);
+            } else {
+                // 如果是 未加锁 页面,显示 加锁的图标
+                viewHolder.ivPress.setImageResource(R.drawable.selector_item_lock_bg);
+            }
+            return convertView;
+        }
+    }
+
+    class ViewHolder {
+        ImageView ivIcon;
+        TextView tvName;
+        ImageView ivPress;
     }
 
     @OnClick({R.id.bt_unlock, R.id.bt_lock})
@@ -80,6 +183,9 @@ public class AppLockAcitivity extends Activity {
                 btLock.setTextColor(Color.BLUE);
                 lvUnlock.setVisibility(View.VISIBLE);
                 lvLock.setVisibility(View.GONE);
+                //显示未加锁的数目
+
+
                 break;
             case R.id.bt_lock:
                 // 当点击 已加锁的时候  已加锁的 背景 变为紫色 文字颜色为白色
@@ -90,9 +196,11 @@ public class AppLockAcitivity extends Activity {
                 btUnlock.setBackgroundResource(R.drawable.shape_unlock_write_bg);
                 btUnlock.setTextColor(Color.BLUE);
 
-                lvUnlock.setVisibility(View.VISIBLE);
-                lvLock.setVisibility(View.GONE);
+                lvUnlock.setVisibility(View.GONE);
+                lvLock.setVisibility(View.VISIBLE);
                 break;
         }
     }
+
+
 }

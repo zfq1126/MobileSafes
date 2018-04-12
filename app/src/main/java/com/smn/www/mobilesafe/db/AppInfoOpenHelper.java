@@ -18,7 +18,7 @@ public class AppInfoOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //创建数据表
-        String sql="create table" + DBConstent.TB_NAME + "(_id integer primary key,"+DBConstent.PACKAGENAME + "varchar(10);)";
+        String sql="create table "+DBConstent.TABLE_NAME+"(_id integer primary key, "+DBConstent.PACKAGENAME+" varchar(25));";
         db.execSQL(sql);
     }
 

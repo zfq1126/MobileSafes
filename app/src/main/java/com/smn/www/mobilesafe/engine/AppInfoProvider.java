@@ -32,7 +32,7 @@ public class AppInfoProvider {
             String name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
             //获取应用程序的图标
             Drawable drawable = packageInfo.applicationInfo.loadIcon(packageManager);
-            AppInfo appInfo = new AppInfo(packageName, name, drawable);
+            AppInfo appInfo = new AppInfo(packageName, drawable ,name);
             appInfos.add(appInfo);
         }
         return appInfos;

@@ -3,19 +3,18 @@ package com.smn.www.mobilesafe.bean;
 import android.graphics.drawable.Drawable;
 
 /**
- * Created by Administrator on 2018-04-08.
+ * Created by Administrator on 2018-04-09.
  */
 
 public class AppInfo {
-
     private String packageName;
     private String name;
     private Drawable drawable;
 
-    public AppInfo(String packageName, String name, Drawable drawable) {
+    public AppInfo(String packageName, Drawable drawable, String name) {
         this.packageName = packageName;
-        this.name = name;
         this.drawable = drawable;
+        this.name = name;
     }
 
     public String getPackageName() {
