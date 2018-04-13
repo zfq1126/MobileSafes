@@ -10,7 +10,7 @@ public class DBConstent {
     //数据库的名称
     public static final String DB_NAME="lock.db";
     //数据表的名字
-    public static final String TB_NAME="lockList";
+    public static final String TABLE_NAME="lockList";
     //字段的名称
     public static final String PACKAGENAME="packagename";
 }
