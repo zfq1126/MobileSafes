@@ -47,6 +47,7 @@
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></ListView>
+        <!--数据图下载的图标显示-->
         <!--<include layout="@layout/layout_progress"/>-->
     </FrameLayout>
 </LinearLayout>
